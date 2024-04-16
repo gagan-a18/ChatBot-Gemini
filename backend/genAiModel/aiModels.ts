@@ -1,12 +1,9 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai")
+import { ChatSession, GenerativeModel } from "@google/generative-ai";
 
-const aiModels = async (prompt: string) => {
+const aiModels = async (prompt: string, gemini_chat: ChatSession) => {
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
+    const result = await gemini_chat.sendMessage(prompt);
+    const response = result.response;
     const text = response.text();
 
     return text;

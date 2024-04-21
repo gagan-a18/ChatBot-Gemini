@@ -3,16 +3,21 @@ import SubmitWindow from "../SubmitWindow"
 import TextWindow from "../TextWindow"
 import { chatWindowStyles, lowerWindowStyles } from "./chatWindowStyles"
 
+type Message = {
+    role: string,
+    info: string
+}
+
 const ChatWindow = () => {
 
-    const [usermessage, setUserMessage] = useState("");
-    const [assistantmessage, setAssistantMessage] = useState("");
+
+    const [message, setMessage] = useState<Message[]>([])
 
     return (
         <div className={`${chatWindowStyles}`}>
-            <TextWindow userMessage={usermessage} assistantMessage={assistantmessage} />
+            <TextWindow messages={message} />
             <div className={`${lowerWindowStyles}`}>
-                <SubmitWindow setMessage={setUserMessage} setAssistantMessage={setAssistantMessage} />
+                <SubmitWindow messages={message} setMessages={setMessage} />
             </div>
         </div>
     )

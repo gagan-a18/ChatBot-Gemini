@@ -6,21 +6,40 @@ type FormValues = {
     fieldInput: string
 }
 
-interface SubmitProps {
-    setMessage: React.Dispatch<React.SetStateAction<string>>,
-    setAssistantMessage: React.Dispatch<React.SetStateAction<string>>
+type Message = {
+    role: string,
+    info: string
 }
 
-const SubmitWindow = ({ setMessage, setAssistantMessage }: SubmitProps) => {
+interface SubmitProps {
+    messages: Message[]
+    setMessages: React.Dispatch<React.SetStateAction<Message[]>>
+}
+
+const SubmitWindow = ({ messages, setMessages }: SubmitProps) => {
 
     const { register, handleSubmit, reset } = useForm<FormValues>();
+
     const onSubmit = (data: FormValues) => {
-        setMessage(data.fieldInput);
+
+        const newMessage = {
+            role: "user",
+            info: data.fieldInput,
+        }
+
         promptAnswer(data.fieldInput).then((response) => {
-            setAssistantMessage(response?.data);
+            const newAssistMessage = {
+                role: "assistant",
+                info: response.data,
+            }
+            const newAMsg = [...messages, newMessage, newAssistMessage,];
+            setMessages(newAMsg);
         }).catch((err) => console.log(err));
+
         reset();
     }
+    console.log(...messages);
+
     return (
         <div className={`${submitWindowStyles}`}>
             <form onSubmit={handleSubmit(onSubmit)}>
